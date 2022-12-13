@@ -1,9 +1,9 @@
 ﻿#include "main.h"
 #include "Library.hpp"
 
-int healthTopColor;
-int healthDownColor;
-int CPlayerTags__DrawHealthBar;
+int healthTopColor = { 0 };
+int healthDownColor = { 0 };
+int CPlayerTags__DrawHealthBar = { 0 };
 
 template <typename T>
 inline void write_memory(std::uintptr_t address, T value, bool protect = true) {
@@ -48,32 +48,24 @@ void GameloopHooked() {
 			CPlayerTags__DrawHealthBar = 0x689C0;
 			healthTopColor = 0x68B0C;
 			healthDownColor = 0x68B33;
-			PlayerTags__HealthHook = std::make_unique<memwrapper::memhook<CPlayerTags__Prototype>>(SAMP::GetSAMPHandle() + CPlayerTags__DrawHealthBar, &CPlayerTagHook);
-			PlayerTags__HealthHook->install();
 			break;
 		}
 		case (SAMP::sampVersion::R2): {
 			CPlayerTags__DrawHealthBar = 0x68A90;
 			healthTopColor = 0x68BDC;
 			healthDownColor = 0x68C03;
-			PlayerTags__HealthHook = std::make_unique<memwrapper::memhook<CPlayerTags__Prototype>>(SAMP::GetSAMPHandle() + CPlayerTags__DrawHealthBar, &CPlayerTagHook);
-			PlayerTags__HealthHook->install();
 			break;
 		}
 		case (SAMP::sampVersion::R3): {
 			CPlayerTags__DrawHealthBar = 0x6C930;
 			healthTopColor = 0x6CA7C;
 			healthDownColor = 0x6CAA3;
-			PlayerTags__HealthHook = std::make_unique<memwrapper::memhook<CPlayerTags__Prototype>>(SAMP::GetSAMPHandle() + CPlayerTags__DrawHealthBar, &CPlayerTagHook);
-			PlayerTags__HealthHook->install();
 			break;
 		}
 		case (SAMP::sampVersion::R4): {
 			CPlayerTags__DrawHealthBar = 0x6D060;
 			healthTopColor = 0x6D1AC;
 			healthDownColor = 0x6D1D3;
-			PlayerTags__HealthHook = std::make_unique<memwrapper::memhook<CPlayerTags__Prototype>>(SAMP::GetSAMPHandle() + CPlayerTags__DrawHealthBar, &CPlayerTagHook);
-			PlayerTags__HealthHook->install();
 			break;
 
 		}
@@ -81,14 +73,17 @@ void GameloopHooked() {
 			CPlayerTags__DrawHealthBar = 0x6CAE0;
 			healthTopColor = 0x6CC2C;
 			healthDownColor = 0x6CC53;
-			PlayerTags__HealthHook = std::make_unique<memwrapper::memhook<CPlayerTags__Prototype>>(SAMP::GetSAMPHandle() + CPlayerTags__DrawHealthBar, &CPlayerTagHook);
-			PlayerTags__HealthHook->install();
 			break;
 		}
 		default: {
 			break;
 		}
 		}
+
+                if (CPlayerTags__DrawHealthBar != 0 ){
+                    PlayerTags__HealthHook = std::make_unique<memwrapper::memhook<CPlayerTags__Prototype>>(SAMP::GetSAMPHandle() + CPlayerTags__DrawHealthBar, &CPlayerTagHook);
+                    PlayerTags__HealthHook->install();
+                }
 		
 
 		DrawBarHook = std::make_unique<memwrapper::memhook<CSprite2d__DrawBarChart>>(0x589395, &CDrawHealthBar);
